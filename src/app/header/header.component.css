@@ -33,4 +33,10 @@
 
 .input-search {
   margin-right: 10px;
+  background: #4e5358;
+  color: #fff;
+}
+
+.input-search::placeholder {
+  color: #fff;
 }
