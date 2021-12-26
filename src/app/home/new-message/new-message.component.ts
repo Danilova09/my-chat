@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-new-message',
@@ -6,10 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./new-message.component.css']
 })
 export class NewMessageComponent implements OnInit {
+  @ViewChild('messageForm') messageForm!: NgForm;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onSubmit() {
+    // console.log(this.messageForm.value.author, this.messageForm.value.message);
   }
 
 }

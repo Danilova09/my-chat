@@ -1,10 +1,18 @@
-<div class="message-block">
-  <h6 class="text-center">Messages</h6>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
-  <app-message-item></app-message-item>
+<div class="main">
+  <div class="d-flex justify-content-center" *ngIf="isFetchingMessages">
+    <div class="spinner-border text-secondary" role="status">
+      <span class="sr-only">Loading...</span>
+    </div>
+  </div>
+  <div class="message-block" *ngIf="!isFetchingMessages">
+    <h6 class="text-center">Messages</h6>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+    <app-message-item></app-message-item>
+  </div>
 </div>
+

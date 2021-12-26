@@ -3,14 +3,14 @@
     <h6>Say something!</h6>
   </div>
   <div class="card-body">
-    <form class="form d-block px-5">
+    <form class="form d-block px-5" #messageForm="ngForm" (ngSubmit)="onSubmit()" ngNativeValidate>
       <input name="author" id="author" class="form-control mt-3"
-             placeholder="author"
+             placeholder="author" required
              ngModel>
       <input type="text" name="message" id="message" class="form-control mt-3"
-             placeholder="message"
+             placeholder="message" required
              ngModel>
-      <button class="btn btn-secondary mt-3 text-right d-block ml-auto">send</button>
+      <button class="btn btn-secondary mt-3 text-right d-block ml-auto" type="submit">send</button>
     </form>
   </div>
 </div>
