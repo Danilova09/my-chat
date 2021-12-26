@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { MessagesService } from '../../shared/messages.service';
 
 @Component({
   selector: 'app-new-message',
@@ -9,13 +10,15 @@ import { NgForm } from '@angular/forms';
 export class NewMessageComponent implements OnInit {
   @ViewChild('messageForm') messageForm!: NgForm;
 
-  constructor() { }
+  constructor(
+    private messagesService: MessagesService,
+  ) { }
 
   ngOnInit(): void {
   }
 
   onSubmit() {
-    // console.log(this.messageForm.value.author, this.messageForm.value.message);
+    this.messagesService.sendMessage(this.messageForm.value.author, this.messageForm.value.message);
   }
 
 }

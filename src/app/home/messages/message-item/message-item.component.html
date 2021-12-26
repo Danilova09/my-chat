@@ -1,6 +1,9 @@
 <div class="card my-3">
   <div class="card-body bg-light">
-    <p><strong>Name </strong><span class="text-black-50">(date: 25/12/2021, time: 12:58)</span> </p>
-    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consequuntur, saepe?</p>
+    <p>Name: <strong> {{ message.author }} </strong><span class="text-black-50">
+      datetime:
+      ({{ message.datetime.slice(0, 10) }},
+      {{ message.datetime.slice(11, 16) }})</span> </p>
+    <p>{{ message.message }}</p>
   </div>
 </div>

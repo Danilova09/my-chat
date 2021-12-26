@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -25,11 +26,27 @@ export class MessagesService {
       }, () => {
       })).subscribe(messages => {
         this.messages = messages;
-        this.messagesChange.next(messages);
+        this.sortMessagesByDate();
+        this.messagesChange.next(this.messages);
     }, () => {
       this.fetchingMessages.next(false);
     });
   }
 
+  sortMessagesByDate() {
+    this.messages.sort((currentMessage: Message, nextMessage: Message) => {
+      return  <any>new Date(nextMessage.datetime) - <any>new Date(currentMessage.datetime);
+    })
+  }
+
+  sendMessage(author: string, message: string) {
+    let body = new URLSearchParams();
+    body.set('author', `${author}`);
+    body.set('message', `${message}`);
+    this.http.post('http://146.185.154.90:8000/messages', body).subscribe(result => {
+      console.log(result);
+    })
+    this.fetchMessages();
+  }
 
 }

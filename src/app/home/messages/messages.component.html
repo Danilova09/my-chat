@@ -6,13 +6,8 @@
   </div>
   <div class="message-block" *ngIf="!isFetchingMessages">
     <h6 class="text-center">Messages</h6>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
-    <app-message-item></app-message-item>
+    <app-message-item *ngFor="let message of messages"
+    [message]="message"></app-message-item>
   </div>
 </div>
 

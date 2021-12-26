@@ -28,6 +28,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
     this.messagesService.fetchMessages();
   }
 
+
   ngOnDestroy() {
     this.messagesSubscription.unsubscribe();
     this.fetchingMessagesSubscription.unsubscribe();
