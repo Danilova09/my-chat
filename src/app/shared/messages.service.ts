@@ -1,9 +1,8 @@
 import { Message } from './message.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +12,12 @@ export class MessagesService {
   messagesChange = new Subject<Message[]>();
   fetchingMessages = new Subject<boolean>();
   isSendingMessage = new Subject<boolean>();
+  messagesInterval!: number;
+  messagesIntervalSubscription!: Subscription;
+  lastDatetime!: string;
+  currentDatetime!: string;
+  isMessagesInterval = false;
+  messagesObservable!: Observable<Message[]>;
 
   constructor(
     private http: HttpClient,
@@ -20,34 +25,45 @@ export class MessagesService {
   }
 
   fetchMessages() {
-    let lastDatetime: string;
     this.fetchingMessages.next(true);
     this.http.get<Message[]>('http://146.185.154.90:8000/messages').pipe(
       map(messages => {
         this.fetchingMessages.next(false);
-        lastDatetime = messages[messages.length - 1].datetime;
+        this.lastDatetime = messages[messages.length - 1].datetime;
         return messages;
       })).subscribe(messages => {
+      messages.splice(1, 15);
       this.messages = messages;
       this.sortMessagesByDate();
       this.messagesChange.next(this.messages);
     }, () => {
       this.fetchingMessages.next(false);
     });
+  }
 
-    const interval = setInterval(() => {
-      let currentDatetime: string;
-      this.http.get<Message[]>(`http://146.185.154.90:8000/messages`).pipe(
-        map(messages => {
-          currentDatetime = messages[messages.length - 1].datetime;
-          this.fetchingMessages.next(false);
-          if (lastDatetime !== currentDatetime) {
-            this.fetchingMessages.next(true);
-            lastDatetime = currentDatetime;
-            return messages;
-          }
-          return this.messages;
-        })).subscribe(messages => {
+
+  start() {
+    if (!this.isMessagesInterval) {
+      this.messagesObservable = new Observable(observer => {
+        this.messagesInterval = setInterval(() => {
+          this.http.get<Message[]>(`http://146.185.154.90:8000/messages`).pipe(
+            map(messages => {
+              console.log('in interval');
+              this.isMessagesInterval = true;
+              this.currentDatetime = messages[messages.length - 1].datetime;
+              if (this.lastDatetime !== this.currentDatetime) {
+                this.fetchingMessages.next(true);
+                this.lastDatetime = this.currentDatetime;
+                messages.splice(1, 15);
+                observer.next(messages);
+              }
+              return this.messages;
+            })).subscribe((messages: Message[]) => {
+              observer.next(messages);
+          });
+        }, 2000);
+      });
+      this.messagesIntervalSubscription = this.messagesObservable.subscribe(messages => {
         this.messages = messages;
         this.sortMessagesByDate();
         this.fetchingMessages.next(false);
@@ -55,7 +71,13 @@ export class MessagesService {
       }, () => {
         this.fetchingMessages.next(false);
       });
-    }, 2000);
+    }
+  }
+
+  stop() {
+    this.messagesIntervalSubscription.unsubscribe();
+    this.isMessagesInterval = false;
+    clearInterval(this.messagesInterval);
   }
 
   sortMessagesByDate() {
