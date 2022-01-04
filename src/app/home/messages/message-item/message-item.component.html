@@ -1,9 +1,9 @@
 <div class="card my-3">
   <div class="card-body bg-light">
-    <p>Name: <strong> {{ message.author }} </strong><span class="text-black-50">
+    <p>Name: <strong>{{ message.author }}</strong><span class="text-black-50">
       datetime:
       ({{ message.datetime.slice(0, 10) }},
-      {{ message.datetime.slice(11, 16) }})</span> </p>
+      {{ message.datetime.slice(11, 16) }})</span></p>
     <p>{{ message.message }}</p>
   </div>
 </div>

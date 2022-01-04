@@ -16,8 +16,7 @@ export class MessagesComponent implements OnInit, OnDestroy {
 
   constructor(
     private messagesService: MessagesService,
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.messagesSubscription = this.messagesService.messagesChange.subscribe((messages: Message[]) => {

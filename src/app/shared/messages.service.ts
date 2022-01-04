@@ -1,28 +1,27 @@
-import { Message } from './message.model';
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, Subject, Subscription } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
+import { Message } from './message.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MessagesService {
   messages: Message[] = [];
   messagesChange = new Subject<Message[]>();
   fetchingMessages = new Subject<boolean>();
   isSendingMessage = new Subject<boolean>();
-  messagesInterval!: number;
   messagesIntervalSubscription!: Subscription;
+  messagesObservable!: Observable<Message[]>;
+  messagesInterval!: number;
   lastDatetime!: string;
   currentDatetime!: string;
   isMessagesInterval = false;
-  messagesObservable!: Observable<Message[]>;
 
   constructor(
     private http: HttpClient,
-  ) {
-  }
+  ) {}
 
   fetchMessages() {
     this.fetchingMessages.next(true);
@@ -41,25 +40,22 @@ export class MessagesService {
     });
   }
 
-
   start() {
     if (!this.isMessagesInterval) {
       this.messagesObservable = new Observable(observer => {
         this.messagesInterval = setInterval(() => {
-          this.http.get<Message[]>(`http://146.185.154.90:8000/messages`).pipe(
+          this.http.get<Message[]>('http://146.185.154.90:8000/messages').pipe(
             map(messages => {
-              console.log('in interval');
               this.isMessagesInterval = true;
               this.currentDatetime = messages[messages.length - 1].datetime;
               if (this.lastDatetime !== this.currentDatetime) {
-                this.fetchingMessages.next(true);
                 this.lastDatetime = this.currentDatetime;
                 messages.splice(1, 15);
-                observer.next(messages);
+                return messages;
               }
               return this.messages;
             })).subscribe((messages: Message[]) => {
-              observer.next(messages);
+            observer.next(messages);
           });
         }, 2000);
       });

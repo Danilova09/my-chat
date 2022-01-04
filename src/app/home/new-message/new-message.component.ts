@@ -13,15 +13,14 @@ export class NewMessageComponent implements OnInit, OnDestroy {
   isSending: boolean = false;
   sendingSubscription!: Subscription;
 
-
   constructor(
     private messagesService: MessagesService,
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     this.sendingSubscription = this.messagesService.isSendingMessage.subscribe((isSending: boolean) => {
       this.isSending = isSending;
-    })
+    });
   }
 
   onSubmit() {
