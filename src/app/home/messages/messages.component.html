@@ -1,11 +1,11 @@
 <div class="main">
-  <div class="d-flex justify-content-center" *ngIf="isFetchingMessages">
+  <h6 class="text-center">Messages</h6>
+  <div class="d-flex justify-content-center mt-5" *ngIf="isFetchingMessages">
     <div class="spinner-border text-secondary" role="status">
       <span class="sr-only">Loading...</span>
     </div>
   </div>
   <div class="message-block" *ngIf="!isFetchingMessages">
-    <h6 class="text-center">Messages</h6>
     <app-message-item *ngFor="let message of messages"
     [message]="message"></app-message-item>
   </div>
